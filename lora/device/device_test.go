@@ -33,14 +33,17 @@ func TestLoraDevice_List(t *testing.T) {
 
 	dev := *New(*conn, "4")
 	params := model.NewDeviceRequestBuilder().
-		DeviceID("0fb7789000000a60").
-		Limit("1")
+		//DeviceID("0fb7789000000a60").
+		Limit("2")
 	ds, err := dev.List(params)
 	if err != nil {
 		t.Fatal(err)
 	}
 	fmt.Println(ds.Total)
-	fmt.Println(len(*ds.Items))
+	items := *ds.Items
+	for _, item := range items {
+		fmt.Printf("%s:%s\n", item.DevEUI, item.Name)
+	}
 }
 
 func TestLoraDevice_GetOTAAKeys(t *testing.T) {

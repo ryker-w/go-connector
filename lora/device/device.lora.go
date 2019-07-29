@@ -7,6 +7,10 @@ import (
 	"github.com/lishimeng/go-connector/lora/model"
 )
 
+func init() {
+
+}
+
 func New(connector lora.Connector, appId string) *lora.Device {
 
 	dev := loraDevice{connector: connector, appId: appId}
@@ -19,8 +23,37 @@ type loraDevice struct {
 	appId string
 }
 
-func (d loraDevice) Create() {
+func (d loraDevice) Create(device model.DeviceForm) (code int, err error) {
 
+	device.ReferenceAltitude = 0
+	device.SkipFCntCheck = true
+	req := model.DeviceFormWrapper{Device: device}
+
+	resp, err := d.connector.Request().
+		SetBody(req).
+		Post("/api/devices")
+
+	if err == nil {
+		code = resp.StatusCode()
+	}
+	return code, err
+}
+
+func (d loraDevice) Edit(device model.DeviceForm) (code int, err error) {
+	devEUI := device.DevEUI
+	device.ReferenceAltitude = 0
+	device.SkipFCntCheck = true
+	req := model.DeviceFormWrapper{Device: device}
+
+	resp, err := d.connector.Request().
+		SetPathParams(map[string]string{"dev_eui": devEUI}).
+		SetBody(req).
+		Put("/api/devices/{dev_eui}")
+
+	if err == nil {
+		code = resp.StatusCode()
+	}
+	return code, err
 }
 
 func (d loraDevice) Delete(deviceEUI string) (int, error) {
@@ -30,10 +63,6 @@ func (d loraDevice) Delete(deviceEUI string) (int, error) {
 		return 0, err
 	}
 	return resp.StatusCode(), err
-}
-
-func (d loraDevice) Edit() {
-
 }
 
 func (d loraDevice) List(param *model.DeviceRequestBuilder) (devices model.DevicePage, err error) {
@@ -55,36 +84,3 @@ func (d loraDevice) List(param *model.DeviceRequestBuilder) (devices model.Devic
 	return devices, err
 }
 
-func (d loraDevice) SetOTAAKeys(keys model.DeviceKeys) (code int, err error) {
-
-	keysParam := model.DeviceOTAAKeys{DeviceKeys: keys}
-	devEUI := keys.DevEUI
-
-	resp, err := d.connector.Request().
-		SetBody(&keysParam).
-		SetPathParams(map[string]string{"dev_eui": devEUI}).
-		Put("/api/devices/{dev_eui}/keys")
-
-	if err == nil {
-		code = resp.StatusCode()
-	}
-
-	return code, err
-}
-
-func (d loraDevice) GetOTAAKeys(devEUI string) (keys model.DeviceKeys, code int, err error) {
-	resp, err := d.connector.Request().
-		SetPathParams(map[string]string{"dev_eui": devEUI}).
-		Get("/api/devices/{dev_eui}/keys")
-
-	if err == nil {
-		code = resp.StatusCode()
-		body := resp.Body()
-		keysParam := model.DeviceOTAAKeys{}
-		err = json.Unmarshal(body, &keysParam)
-		if err == nil {
-			keys = keysParam.DeviceKeys
-		}
-	}
-	return keys, code, err
-}

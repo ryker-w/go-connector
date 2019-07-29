@@ -23,8 +23,8 @@ type Connector interface {
 }
 
 type Gateway interface {
-	Create()
-	Delete()
+	Create(param model.GatewayForm) (code int, err error)
+	Delete(id string) (int, error)
 	Edit()
 	List()
 }
@@ -37,11 +37,12 @@ type Application interface {
 }
 
 type Device interface {
-	Create()
+	Create(device model.DeviceForm) (code int, err error)
 	Delete(devEUI string) (int, error)
-	Edit()
+	Edit(device model.DeviceForm) (code int, err error)
 	List(*model.DeviceRequestBuilder) (model.DevicePage, error)
 
+	// OTAA key
 	GetOTAAKeys(devEUI string) (keys model.DeviceKeys, code int, err error)
 	SetOTAAKeys(keys model.DeviceKeys) (code int, err error)
 }

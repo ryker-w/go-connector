@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 	"github.com/lishimeng/go-connector/lora"
+	"github.com/lishimeng/go-connector/lora/model"
 )
 
 
@@ -17,15 +18,26 @@ type gateway struct {
 	connector lora.Connector
 }
 
-func (gw gateway) Create() {
+func (gw gateway) Create(param model.GatewayForm) (code int, err error) {
 
-	//path := "/api/gateways"
+	req := model.GatewayFormWrapper{ Gateway: param }
 
+	resp, err := gw.connector.Request().
+		SetBody(req).
+		Post("/api/gateways")
 
+	if err == nil {
+		code = resp.StatusCode()
+	}
+	return code, err
 }
 
-func (gw gateway) Delete() {
-
+func (gw gateway) Delete(id string) (int, error) {
+	resp, err := gw.connector.Request().SetPathParams(map[string]string{"id": id}).Delete("/api/gateways/{id}")
+	if err != nil {
+		return 0, err
+	}
+	return resp.StatusCode(), err
 }
 
 func (gw gateway) Edit() {

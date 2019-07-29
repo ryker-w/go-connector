@@ -5,18 +5,19 @@ import (
 	"time"
 )
 
-type DeviceForm struct {
-	Device DeviceFormContent `json:"device"`
+type DeviceFormWrapper struct {
+	Device DeviceForm `json:"device"`
 }
 
-type DeviceFormContent struct {
-	ApplicationID string `json:"applicationID"`
-	Description string `json:"description"`
+type DeviceForm struct {
 	DevEUI string `json:"devEUI"`
-	DeviceProfileID string `json:"deviceProfileID"`
 	Name string `json:"name"`
-	ReferenceAltitude int `json:"referenceAltitude"`
-	SkipFCntCheck bool `json:"skipFCntCheck"`
+	ApplicationID string `json:"applicationID"`
+	Description string `json:"description,omitempty"`
+
+	DeviceProfileID string `json:"deviceProfileID,omitempty"`
+	ReferenceAltitude int `json:"referenceAltitude,omitempty"`
+	SkipFCntCheck bool `json:"skipFCntCheck,omitempty"`
 }
 
 type DeviceInfo struct {
@@ -42,16 +43,16 @@ type DeviceKeys struct {
 type DeviceItemInfo struct {
 	DevEUI string `json:"devEUI"`
 	Name string `json:"name"`
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 	ApplicationID string `json:"applicationID"`
-	DeviceProfileID string `json:"deviceProfileID"`
-	DeviceProfileName string `json:"deviceProfileName"`
-	DeviceStatusBattery string `json:"deviceStatusBattery"`
-	DeviceStatusMargin string `json:"deviceStatusMargin"`
-	DeviceStatusExternalPowerSource bool `json:"deviceStatusExternalPowerSource"`
-	DeviceStatusBatteryLevelUnavailable bool `json:"deviceStatusBatteryLevelUnavailable"`
-	DeviceStatusBatteryLevel string `json:"deviceStatusBatteryLevel"`
-	LastSeenAt string `json:"lastSeenAt"`
+	DeviceProfileID string `json:"deviceProfileID,omitempty"`
+	DeviceProfileName string `json:"deviceProfileName,omitempty"`
+	DeviceStatusBattery int `json:"deviceStatusBattery,omitempty"`
+	DeviceStatusMargin int `json:"deviceStatusMargin,omitempty"`
+	DeviceStatusExternalPowerSource bool `json:"deviceStatusExternalPowerSource,omitempty"`
+	DeviceStatusBatteryLevelUnavailable bool `json:"deviceStatusBatteryLevelUnavailable,omitempty"`
+	DeviceStatusBatteryLevel int `json:"deviceStatusBatteryLevel,omitempty"`
+	LastSeenAt string `json:"lastSeenAt,omitempty"`
 }
 
 // application列表
