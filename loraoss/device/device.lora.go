@@ -3,24 +3,24 @@ package device
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/lishimeng/go-connector/lora"
-	"github.com/lishimeng/go-connector/lora/model"
+	"github.com/lishimeng/go-connector/loraoss"
+	"github.com/lishimeng/go-connector/loraoss/model"
 )
 
 func init() {
 
 }
 
-func New(connector lora.Connector, appId string) *lora.Device {
+func New(connector loraoss.Connector, appId string) *loraoss.Device {
 
 	dev := loraDevice{connector: connector, appId: appId}
-	var h lora.Device = &dev
+	var h loraoss.Device = &dev
 	return &h
 }
 
 type loraDevice struct {
-	connector lora.Connector
-	appId string
+	connector loraoss.Connector
+	appId     string
 }
 
 func (d loraDevice) Create(device model.DeviceForm) (code int, err error) {

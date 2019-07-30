@@ -2,18 +2,18 @@ package device
 
 import (
 	"fmt"
-	"github.com/lishimeng/go-connector/lora"
-	"github.com/lishimeng/go-connector/lora/connector"
-	"github.com/lishimeng/go-connector/lora/model"
-	"github.com/lishimeng/go-connector/lora/test"
+	"github.com/lishimeng/go-connector/loraoss"
+	"github.com/lishimeng/go-connector/loraoss/connector"
+	"github.com/lishimeng/go-connector/loraoss/model"
+	"github.com/lishimeng/go-connector/loraoss/test"
 	"testing"
 )
 
-var _conn *lora.Connector
-func getConnector() (c *lora.Connector, err error) {
+var _conn *loraoss.Connector
+func getConnector() (c *loraoss.Connector, err error) {
 	if _conn == nil {
 		connector.DebugEnable = true
-		conn := connector.New(lora.ConnectorConfig{Host: test.Host, UserName: test.Username, Password: test.Password})
+		conn := connector.New(loraoss.ConnectorConfig{Host: test.Host, UserName: test.Username, Password: test.Password})
 		var c = *conn
 		_, err = c.Login()
 		if err == nil {

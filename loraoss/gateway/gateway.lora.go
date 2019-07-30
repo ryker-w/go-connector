@@ -2,20 +2,20 @@ package gateway
 
 import (
 	"fmt"
-	"github.com/lishimeng/go-connector/lora"
-	"github.com/lishimeng/go-connector/lora/model"
+	"github.com/lishimeng/go-connector/loraoss"
+	"github.com/lishimeng/go-connector/loraoss/model"
 )
 
 
-func New(connector lora.Connector) *lora.Gateway {
+func New(connector loraoss.Connector) *loraoss.Gateway {
 
 	gw := gateway{connector: connector}
-	var g lora.Gateway = &gw
+	var g loraoss.Gateway = &gw
 	return &g
 }
 
 type gateway struct {
-	connector lora.Connector
+	connector loraoss.Connector
 }
 
 func (gw gateway) Create(param model.GatewayForm) (code int, err error) {

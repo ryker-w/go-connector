@@ -2,26 +2,26 @@ package connector
 
 import (
 	"github.com/go-resty/resty/v2"
-	"github.com/lishimeng/go-connector/lora"
+	"github.com/lishimeng/go-connector/loraoss"
 )
 
 type loraConnector struct {
-	config lora.ConnectorConfig
+	config loraoss.ConnectorConfig
 	client *resty.Client
-	jwt lora.Token
+	jwt    loraoss.Token
 }
 
-func New(config lora.ConnectorConfig) *lora.Connector{
+func New(config loraoss.ConnectorConfig) *loraoss.Connector{
 
 	c := loraConnector{
 		config: config,
 	}
 
-	var con lora.Connector = &c
+	var con loraoss.Connector = &c
 	return &con
 }
 
-func (c *loraConnector) Login() (token lora.Token, err error) {
+func (c *loraConnector) Login() (token loraoss.Token, err error) {
 
 	token, err = login(c.config.Host, "/api/internal/login", c.config.UserName, c.config.Password)
 	if err == nil {

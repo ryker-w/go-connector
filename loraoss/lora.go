@@ -1,8 +1,8 @@
-package lora
+package loraoss
 
 import (
 	"github.com/go-resty/resty/v2"
-	"github.com/lishimeng/go-connector/lora/model"
+	"github.com/lishimeng/go-connector/loraoss/model"
 )
 
 type Token struct {

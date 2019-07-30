@@ -3,12 +3,12 @@ package connector
 import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
-	"github.com/lishimeng/go-connector/lora"
+	"github.com/lishimeng/go-connector/loraoss"
 )
 
 var DebugEnable = false
 
-func login(host string, path string, username string, password string) (token lora.Token, err error) {
+func login(host string, path string, username string, password string) (token loraoss.Token, err error) {
 
 	client := resty.New().SetHostURL(host)//.SetDebug(DebugEnable)
 	resp, err := client.R().
@@ -17,7 +17,7 @@ func login(host string, path string, username string, password string) (token lo
 		Post(path)
 	if err == nil {
 		raw := resp.Body()
-		token = lora.Token{}
+		token = loraoss.Token{}
 		err = json.Unmarshal(raw, &token)
 	}
 	return token, err

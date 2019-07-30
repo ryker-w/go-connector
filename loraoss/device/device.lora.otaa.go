@@ -2,7 +2,7 @@ package device
 
 import (
 	"encoding/json"
-	"github.com/lishimeng/go-connector/lora/model"
+	"github.com/lishimeng/go-connector/loraoss/model"
 )
 
 func (d loraDevice) SetOTAAKeys(keys model.DeviceKeys) (code int, err error) {

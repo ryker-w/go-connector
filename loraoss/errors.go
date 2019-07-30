@@ -1,4 +1,4 @@
-package lora
+package loraoss
 
 import "errors"
 

@@ -1,16 +1,18 @@
 package application
 
-import "github.com/lishimeng/go-connector/lora"
+import (
+	"github.com/lishimeng/go-connector/loraoss"
+)
 
-func New(connector lora.Connector) *lora.Application {
+func New(connector loraoss.Connector) *loraoss.Application {
 
 	app := loraApplication{connector: connector}
-	var h lora.Application = &app
+	var h loraoss.Application = &app
 	return &h
 }
 
 type loraApplication struct {
-	connector lora.Connector
+	connector loraoss.Connector
 }
 
 func (app loraApplication) Create() {
