@@ -20,7 +20,6 @@ type Connector struct {
 
 func New(broker string, clientId string, topicUpLink string, topicDownLink string, qos uint8) (Connector, error) {
 
-	log.Debug("create mqtt connector[%d]", broker)
 	c := Connector{
 		host:             broker,
 		clientId:         clientId,
@@ -70,7 +69,7 @@ func(c *Connector) messageCallback(mqSession mqtt.Session, topic string, mqttMsg
 		return
 	}
 
-	fmt.Println(payload)
+	c.listener(payload)
 }
 
 func (c Connector) DownLink(appId string, deviceEUI string, payload PayloadTx) (err error) {
