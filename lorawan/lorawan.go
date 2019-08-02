@@ -52,7 +52,14 @@ func (c Connector) GetSession() mqtt.Session {
 
 func (c *Connector) Connect() {
 	log.Debug("lora mqtt connect to broker %s", c.host)
-	c.session.Connect()
+	for err := c.ConnectOnce(); err != nil; {
+		log.Debug(err)
+	}
+}
+
+func (c *Connector) ConnectOnce() error {
+	log.Debug("lora mqtt connect to broker %s", c.host)
+	return c.session.ConnectAndWait()
 }
 
 func (c *Connector) SetUpLinkListener(listener UpLinkListener) {
