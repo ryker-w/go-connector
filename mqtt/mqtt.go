@@ -120,6 +120,18 @@ func (session *Session) Connect() () {
 	}
 }
 
+func (session *Session) ConnectAndWait() (err error) {
+
+	client := Mqtt.NewClient(session.opts)
+	session.client = &client
+
+	token := client.Connect()
+	token.Wait()
+	err = token.Error()
+
+	return err
+}
+
 func (session *Session) Close() () {
 	client := *session.client
 	client.Disconnect(250)
