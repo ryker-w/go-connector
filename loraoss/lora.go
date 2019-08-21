@@ -45,4 +45,5 @@ type Device interface {
 	// OTAA key
 	GetOTAAKeys(devEUI string) (keys model.DeviceKeys, code int, err error)
 	SetOTAAKeys(keys model.DeviceKeys) (code int, err error)
+	UpdateOTAAKeys(keys model.DeviceKeys) (code int, err error)
 }

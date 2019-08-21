@@ -27,6 +27,7 @@ func (d loraDevice) Create(device model.DeviceForm) (code int, err error) {
 
 	device.ReferenceAltitude = 0
 	device.SkipFCntCheck = true
+	device.ApplicationID = d.appId
 	req := model.DeviceFormWrapper{Device: device}
 
 	resp, err := d.connector.Request().

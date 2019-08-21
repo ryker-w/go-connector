@@ -64,3 +64,61 @@ func TestLoraDevice_GetOTAAKeys(t *testing.T) {
 	fmt.Println(res.DevEUI)
 	fmt.Println(res.AppKey)
 }
+
+func TestLoraDevice_Create(t *testing.T) {
+	conn, err := getConnector()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dev := *New(*conn, "1")
+	params := model.DeviceForm{
+		DevEUI: "0fb7789000000a60",
+		Name: "B001",
+		Description: "B001 Beacon",
+		DeviceProfileID: "16cb3289-3b00-47de-8e51-e68b3c16ba72",
+	}
+	code, err := dev.Create(params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code != 200 {
+		t.Fatal(code)
+	}
+}
+
+func TestLoraDevice_SetOTAAKeys(t *testing.T) {
+	conn, err := getConnector()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dev := *New(*conn, "1")
+
+	fmt.Println("test OTAA keys")
+	keys := model.DeviceKeys{ DevEUI: "0fb7789000000a60", AppKey: "2deb83b7137b8c42f328a3ee879b4af4" }
+
+	code, err := dev.SetOTAAKeys(keys)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code != 200 {
+		t.Fatal(code)
+	}
+}
+
+func TestLoraDevice_Delete(t *testing.T) {
+	conn, err := getConnector()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dev := *New(*conn, "1")
+	code, err := dev.Delete("0fb7789000000a60")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code != 200 {
+		t.Fatal(code)
+	}
+}
