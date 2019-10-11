@@ -6,7 +6,6 @@ import (
 	"github.com/lishimeng/go-connector/loraoss/model"
 )
 
-
 func New(connector loraoss.Connector) *loraoss.Gateway {
 
 	gw := gateway{connector: connector}
@@ -20,7 +19,7 @@ type gateway struct {
 
 func (gw gateway) Create(param model.GatewayForm) (code int, err error) {
 
-	req := model.GatewayFormWrapper{ Gateway: param }
+	req := model.GatewayFormWrapper{Gateway: param}
 
 	resp, err := gw.connector.Request().
 		SetBody(req).

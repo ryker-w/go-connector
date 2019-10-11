@@ -6,4 +6,3 @@ func (db *Database) Collection(col string) *Collection {
 	}
 	return collection
 }
-

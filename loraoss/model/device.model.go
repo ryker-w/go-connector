@@ -10,24 +10,24 @@ type DeviceFormWrapper struct {
 }
 
 type DeviceForm struct {
-	DevEUI string `json:"devEUI"`
-	Name string `json:"name"`
+	DevEUI        string `json:"devEUI"`
+	Name          string `json:"name"`
 	ApplicationID string `json:"applicationID"`
-	Description string `json:"description,omitempty"`
+	Description   string `json:"description,omitempty"`
 
-	DeviceProfileID string `json:"deviceProfileID,omitempty"`
-	ReferenceAltitude int `json:"referenceAltitude,omitempty"`
-	SkipFCntCheck bool `json:"skipFCntCheck,omitempty"`
+	DeviceProfileID   string `json:"deviceProfileID,omitempty"`
+	ReferenceAltitude int    `json:"referenceAltitude,omitempty"`
+	SkipFCntCheck     bool   `json:"skipFCntCheck,omitempty"`
 }
 
 type DeviceInfo struct {
 	Device DeviceInfoContent `json:"device"`
 }
 type DeviceInfoContent struct {
-	DevEUI string `json:"devEUI"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	ApplicationID string `json:"applicationID"`
+	DevEUI          string `json:"devEUI"`
+	Name            string `json:"name"`
+	Description     string `json:"description"`
+	ApplicationID   string `json:"applicationID"`
 	DeviceProfileID string `json:"deviceProfileID"`
 }
 
@@ -41,18 +41,18 @@ type DeviceKeys struct {
 }
 
 type DeviceItemInfo struct {
-	DevEUI string `json:"devEUI"`
-	Name string `json:"name"`
-	Description string `json:"description,omitempty"`
-	ApplicationID string `json:"applicationID"`
-	DeviceProfileID string `json:"deviceProfileID,omitempty"`
-	DeviceProfileName string `json:"deviceProfileName,omitempty"`
-	DeviceStatusBattery int `json:"deviceStatusBattery,omitempty"`
-	DeviceStatusMargin int `json:"deviceStatusMargin,omitempty"`
-	DeviceStatusExternalPowerSource bool `json:"deviceStatusExternalPowerSource,omitempty"`
-	DeviceStatusBatteryLevelUnavailable bool `json:"deviceStatusBatteryLevelUnavailable,omitempty"`
-	DeviceStatusBatteryLevel int `json:"deviceStatusBatteryLevel,omitempty"`
-	LastSeenAt string `json:"lastSeenAt,omitempty"`
+	DevEUI                              string `json:"devEUI"`
+	Name                                string `json:"name"`
+	Description                         string `json:"description,omitempty"`
+	ApplicationID                       string `json:"applicationID"`
+	DeviceProfileID                     string `json:"deviceProfileID,omitempty"`
+	DeviceProfileName                   string `json:"deviceProfileName,omitempty"`
+	DeviceStatusBattery                 int    `json:"deviceStatusBattery,omitempty"`
+	DeviceStatusMargin                  int    `json:"deviceStatusMargin,omitempty"`
+	DeviceStatusExternalPowerSource     bool   `json:"deviceStatusExternalPowerSource,omitempty"`
+	DeviceStatusBatteryLevelUnavailable bool   `json:"deviceStatusBatteryLevelUnavailable,omitempty"`
+	DeviceStatusBatteryLevel            int    `json:"deviceStatusBatteryLevel,omitempty"`
+	LastSeenAt                          string `json:"lastSeenAt,omitempty"`
 }
 
 // application列表
@@ -62,7 +62,6 @@ type DevicePage struct {
 }
 
 type DeviceRequestBuilder struct {
-
 	params map[string]string
 }
 

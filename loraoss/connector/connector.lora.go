@@ -11,7 +11,7 @@ type loraConnector struct {
 	jwt    loraoss.Token
 }
 
-func New(config loraoss.ConnectorConfig) *loraoss.Connector{
+func New(config loraoss.ConnectorConfig) *loraoss.Connector {
 
 	c := loraConnector{
 		config: config,

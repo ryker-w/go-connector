@@ -35,6 +35,7 @@ func New(uri string) (connector *Connection, err error) {
 	}
 	return connector, err
 }
+
 // 连接设置
 func setConnect(uri string) (client *mongo.Client, err error) {
 

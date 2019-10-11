@@ -1,7 +1,7 @@
 package mqtt
 
 import (
-	Mqtt"github.com/eclipse/paho.mqtt.golang"
+	Mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 type MessageCallback func(session Session, topic string, msg []byte)
@@ -9,18 +9,18 @@ type ConnectedCallback func(session Session)
 type ConnectionLostCallback func(session Session, reason error)
 
 type Session struct {
-	client *Mqtt.Client
-	opts *Mqtt.ClientOptions
-	OnMessage MessageCallback
-	OnConnected ConnectedCallback
+	client        *Mqtt.Client
+	opts          *Mqtt.ClientOptions
+	OnMessage     MessageCallback
+	OnConnected   ConnectedCallback
 	OnLostConnect ConnectionLostCallback
-	State bool
-	ErrorMessage string
+	State         bool
+	ErrorMessage  string
 }
 
 type Payload struct {
-	Topic string
-	Qos uint8
+	Topic   string
+	Qos     uint8
 	Payload []byte
 }
 
@@ -107,7 +107,7 @@ func (session *Session) Unsubscribe(topic string) bool {
 	}
 }
 
-func (session *Session) Connect() () {
+func (session *Session) Connect() {
 
 	client := Mqtt.NewClient(session.opts)
 	session.client = &client
@@ -132,7 +132,7 @@ func (session *Session) ConnectAndWait() (err error) {
 	return err
 }
 
-func (session *Session) Close() () {
+func (session *Session) Close() {
 	client := *session.client
 	client.Disconnect(250)
 }

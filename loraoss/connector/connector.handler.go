@@ -10,7 +10,7 @@ var DebugEnable = false
 
 func login(host string, path string, username string, password string) (token loraoss.Token, err error) {
 
-	client := resty.New().SetHostURL(host)//.SetDebug(DebugEnable)
+	client := resty.New().SetHostURL(host) //.SetDebug(DebugEnable)
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{"username": username, "password": password}).
@@ -26,7 +26,7 @@ func login(host string, path string, username string, password string) (token lo
 func createRestClient(host string, jwt string) *resty.Client {
 	client := resty.New().
 		SetHostURL(host).
-		SetHeader("Grpc-Metadata-Authorization", "Bearer " + jwt).
+		SetHeader("Grpc-Metadata-Authorization", "Bearer "+jwt).
 		SetHeader("Accept", "application/json").SetDebug(DebugEnable)
 	return client
 }

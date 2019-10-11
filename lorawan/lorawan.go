@@ -68,7 +68,7 @@ func (c *Connector) SetUpLinkListener(listener UpLinkListener) {
 
 // 监听数据上传
 ///
-func(c *Connector) messageCallback(mqSession mqtt.Session, topic string, mqttMsg []byte) {
+func (c *Connector) messageCallback(mqSession mqtt.Session, topic string, mqttMsg []byte) {
 
 	log.Debug("receive lora upLink data %s", topic)
 	payload, err := onDataUpLink(mqttMsg)

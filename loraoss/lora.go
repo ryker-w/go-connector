@@ -10,13 +10,12 @@ type Token struct {
 }
 
 type ConnectorConfig struct {
-	Host string
+	Host     string
 	UserName string
 	Password string
 }
 
 type Connector interface {
-
 	Login() (token Token, err error)
 
 	Request() *resty.Request

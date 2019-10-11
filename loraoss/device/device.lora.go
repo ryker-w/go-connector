@@ -84,4 +84,3 @@ func (d loraDevice) List(param *model.DeviceRequestBuilder) (devices model.Devic
 	}
 	return devices, err
 }
-
