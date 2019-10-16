@@ -18,7 +18,7 @@ type Connector struct {
 	listener         UpLinkListener
 }
 
-func New(broker string, clientId string, topicUpLink string, topicDownLink string, qos uint8) (Connector, error) {
+func New(broker string, clientId string, topicUpLink string, topicDownLink string, qos uint8) (*Connector, error) {
 
 	c := Connector{
 		host:             broker,
@@ -43,7 +43,7 @@ func New(broker string, clientId string, topicUpLink string, topicDownLink strin
 	c.session.OnLostConnect = onConnLost
 	c.session.OnMessage = c.messageCallback
 
-	return c, nil
+	return &c, nil
 }
 
 func (c Connector) GetSession() mqtt.Session {
