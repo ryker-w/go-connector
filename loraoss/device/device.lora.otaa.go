@@ -10,7 +10,7 @@ func (d loraDevice) SetOTAAKeys(keys model.DeviceKeys) (code int, err error) {
 	keysParam := model.DeviceOTAAKeys{DeviceKeys: keys}
 	devEUI := keys.DevEUI
 
-	resp, err := d.connector.Request().
+	resp, err := d.Connector.Request().
 		SetBody(keysParam).
 		SetPathParams(map[string]string{"dev_eui": devEUI}).
 		Post("/api/devices/{dev_eui}/keys")
@@ -27,7 +27,7 @@ func (d loraDevice) UpdateOTAAKeys(keys model.DeviceKeys) (code int, err error) 
 	keysParam := model.DeviceOTAAKeys{DeviceKeys: keys}
 	devEUI := keys.DevEUI
 
-	resp, err := d.connector.Request().
+	resp, err := d.Connector.Request().
 		SetBody(keysParam).
 		SetPathParams(map[string]string{"dev_eui": devEUI}).
 		Put("/api/devices/{dev_eui}/keys")
@@ -40,7 +40,7 @@ func (d loraDevice) UpdateOTAAKeys(keys model.DeviceKeys) (code int, err error) 
 }
 
 func (d loraDevice) GetOTAAKeys(devEUI string) (keys model.DeviceKeys, code int, err error) {
-	resp, err := d.connector.Request().
+	resp, err := d.Connector.Request().
 		SetPathParams(map[string]string{"dev_eui": devEUI}).
 		Get("/api/devices/{dev_eui}/keys")
 

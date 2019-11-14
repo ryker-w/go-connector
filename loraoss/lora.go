@@ -46,3 +46,7 @@ type Device interface {
 	SetOTAAKeys(keys model.DeviceKeys) (code int, err error)
 	UpdateOTAAKeys(keys model.DeviceKeys) (code int, err error)
 }
+
+type DeviceProfile interface {
+	List() (dps model.DeviceProfilePage, err error)
+}

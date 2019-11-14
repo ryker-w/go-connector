@@ -1,6 +1,5 @@
 # Connector
 
-[![Build Status](https://www.travis-ci.org/lishimeng/go-connector.svg?branch=master)](https://www.travis-ci.org/lishimeng/go-connector) 
 [![go report](https://goreportcard.com/badge/github.com/lishimeng/go-connector)](https://goreportcard.com/report/github.com/lishimeng/go-connector)
 
 ### Mongodb
