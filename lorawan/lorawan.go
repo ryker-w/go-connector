@@ -2,8 +2,8 @@ package lorawan
 
 import (
 	"fmt"
-	log "github.com/jeanphorn/log4go"
 	"github.com/lishimeng/go-connector/mqtt"
+	"github.com/lishimeng/go-libs/log"
 )
 
 type UpLinkListener func(data PayloadRx)
@@ -29,15 +29,14 @@ func New(broker string, clientId string, topicUpLink string, topicDownLink strin
 	}
 
 	var onConnect = func(s mqtt.Session) {
-		log.Debug("lora mqtt subscribe upLink topic:%s", c.upLinkTopicTpl)
+		log.Fine("lora subscribe upLink topic:%s", c.upLinkTopicTpl)
 		c.session.Subscribe(c.upLinkTopicTpl, c.qos, nil)
 	}
 	var onConnLost = func(s mqtt.Session, reason error) {
-		log.Debug("lora mqtt lost connection")
-		log.Debug(reason)
-		c.session.State = false
+		log.Fine("lora lost connection")
+		log.Fine(reason)
 	}
-	c.session = mqtt.CreateSession(c.host, c.clientId)
+	c.session = mqtt.CreateSession(false, c.clientId, c.host)
 
 	c.session.OnConnected = onConnect
 	c.session.OnLostConnect = onConnLost
@@ -46,19 +45,19 @@ func New(broker string, clientId string, topicUpLink string, topicDownLink strin
 	return &c, nil
 }
 
-func (c Connector) GetSession() mqtt.Session {
-	return *c.session
+func (c Connector) GetSession() *mqtt.Session {
+	return c.session
 }
 
 func (c *Connector) Connect() {
-	log.Debug("lora mqtt connect to broker %s", c.host)
+	log.Fine("lora connect %s", c.host)
 	for err := c.ConnectOnce(); err != nil; {
-		log.Debug(err)
+		log.Fine(err)
 	}
 }
 
 func (c *Connector) ConnectOnce() error {
-	log.Debug("lora mqtt connect to broker %s", c.host)
+	log.Fine("lora connect %s", c.host)
 	return c.session.ConnectAndWait()
 }
 
@@ -68,10 +67,10 @@ func (c *Connector) SetUpLinkListener(listener UpLinkListener) {
 
 // 监听数据上传
 ///
-func (c *Connector) messageCallback(mqSession mqtt.Session, topic string, mqttMsg []byte) {
+func (c *Connector) messageCallback(_ mqtt.Session, topic string, msg []byte) {
 
-	log.Debug("receive lora upLink data %s", topic)
-	payload, err := onDataUpLink(mqttMsg)
+	log.Fine("lora upLink:%s", topic)
+	payload, err := onDataUpLink(msg)
 	if err != nil {
 		return
 	}
@@ -84,6 +83,6 @@ func (c Connector) DownLink(appId string, deviceEUI string, payload PayloadTx) (
 
 	topic := fmt.Sprintf(c.downLinkTopicTpl, appId, deviceEUI)
 
-	err = c.session.Publish(topic, c.qos, data)
+	err = c.session.Publish(topic, c.qos, false, data)
 	return err
 }

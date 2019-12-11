@@ -1,7 +1,7 @@
 package mqtt
 
 import (
-	Mqtt "github.com/eclipse/paho.mqtt.golang"
+	delegate "github.com/eclipse/paho.mqtt.golang"
 )
 
 type MessageCallback func(session Session, topic string, msg []byte)
@@ -9,13 +9,14 @@ type ConnectedCallback func(session Session)
 type ConnectionLostCallback func(session Session, reason error)
 
 type Session struct {
-	client        *Mqtt.Client
-	opts          *Mqtt.ClientOptions
-	OnMessage     MessageCallback
-	OnConnected   ConnectedCallback
-	OnLostConnect ConnectionLostCallback
-	State         bool
-	ErrorMessage  string
+	client         *delegate.Client
+	opts           *delegate.ClientOptions
+	OnMessage      MessageCallback
+	OnConnected    ConnectedCallback
+	OnLostConnect  ConnectionLostCallback
+	ErrorMessage   string
+	offlineMessage []byte
+	onlineMessage  []byte
 }
 
 type Payload struct {
@@ -24,18 +25,22 @@ type Payload struct {
 	Payload []byte
 }
 
-func CreateSession(broker string, clientId string) *Session {
+func CreateSession(clean bool, clientId string, brokers ...string) *Session {
 	session := Session{}
-	opts := Mqtt.NewClientOptions()
+	opts := delegate.NewClientOptions()
 
-	opts.AddBroker(broker)
+	if len(brokers) > 0 {
+		for _, broker := range brokers {
+			opts.AddBroker(broker)
+		}
+	}
 	opts.SetClientID(clientId)
-	opts.SetCleanSession(true)
+	opts.SetCleanSession(clean)
 	opts.SetDefaultPublishHandler(session.DefaultMessageHandler)
 	opts.SetConnectionLostHandler(session.onConnLost)
 	opts.SetOnConnectHandler(session.onConned)
 
-	c := Mqtt.NewClient(opts)
+	c := delegate.NewClient(opts)
 	session.client = &c
 	session.opts = opts
 	return &session
@@ -52,48 +57,63 @@ func (session *Session) SetAuth(userName string, password string) *Session {
 	return session
 }
 
+func (session *Session) SetWill(qos byte, retained bool, topic string, onLineMessage []byte, offlineMessage []byte) {
+	session.opts.WillEnabled = true
+	session.opts.WillQos = qos
+	session.opts.WillRetained = retained
+	session.opts.WillTopic = topic
+	session.opts.WillPayload = offlineMessage
+	session.onlineMessage = onLineMessage
+	session.offlineMessage = offlineMessage
+}
+
 func (session *Session) CleanSession(clean bool) *Session {
 	session.opts.CleanSession = clean
 	return session
 }
 
-func (session *Session) onConnLost(c Mqtt.Client, reason error) {
+func (session *Session) onConnLost(_ delegate.Client, reason error) {
 	if session.OnLostConnect != nil {
 		session.OnLostConnect(*session, reason)
 	}
 }
 
-func (session *Session) onConned(c Mqtt.Client) {
+func (session *Session) onConned(_ delegate.Client) {
+
+	session.online()
 	if session.OnConnected != nil {
 		session.OnConnected(*session)
 	}
 }
 
-func (session *Session) Publish(topic string, qos uint8, payload string) (err error) {
+func (session *Session) Publish(topic string, qos uint8, retained bool, payload interface{}) (err error) {
 
 	client := *session.client
-	if token := client.Publish(topic, qos, false, payload); token.Wait() && token.Error() != nil {
+	if token := client.Publish(topic, qos, retained, payload); token.Wait() && token.Error() != nil {
 		err = token.Error()
 	}
 	return err
 }
 
+func (session *Session) SimplePublish(topic string, payload interface{}) (err error) {
+
+	return session.Publish(topic, 0, false, payload)
+}
+
 func (session *Session) Subscribe(topic string, qos uint8, callback MessageCallback) bool {
 	client := *session.client
 
-	var cb Mqtt.MessageHandler = nil
+	var cb delegate.MessageHandler = nil
 	if callback != nil {
-		cb = func(client Mqtt.Client, message Mqtt.Message) {
+		cb = func(client delegate.Client, message delegate.Message) {
 			callback(*session, message.Topic(), message.Payload())
 		}
 	}
 
 	if token := client.Subscribe(topic, qos, cb); token.Wait() && token.Error() != nil {
 		session.ErrorMessage = token.Error().Error()
-		session.State = false
 		return false
 	} else {
-		session.State = true
 		return true
 	}
 }
@@ -109,20 +129,20 @@ func (session *Session) Unsubscribe(topic string) bool {
 
 func (session *Session) Connect() {
 
-	client := Mqtt.NewClient(session.opts)
+	client := delegate.NewClient(session.opts)
+
 	session.client = &client
 
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		session.ErrorMessage = "connect failed"
 	} else {
-		session.State = true
 		session.ErrorMessage = ""
 	}
 }
 
 func (session *Session) ConnectAndWait() (err error) {
 
-	client := Mqtt.NewClient(session.opts)
+	client := delegate.NewClient(session.opts)
 	session.client = &client
 
 	token := client.Connect()
@@ -134,10 +154,35 @@ func (session *Session) ConnectAndWait() (err error) {
 
 func (session *Session) Close() {
 	client := *session.client
+	session.offline()
 	client.Disconnect(250)
 }
 
-func (session *Session) DefaultMessageHandler(client Mqtt.Client, msg Mqtt.Message) {
+func (session *Session) online() {
+	session.status(true)
+}
+
+func (session *Session) offline() {
+	session.status(false)
+}
+
+func (session *Session) status(online bool) {
+	var payload []byte
+	if online {
+		payload = session.onlineMessage
+	} else {
+		payload = session.opts.WillPayload
+	}
+
+	if len(session.opts.WillTopic) > 0 && len(payload) > 0 {
+		topic := session.opts.WillTopic
+		qos := session.opts.WillQos
+		retained := session.opts.WillRetained
+		_ = session.Publish(topic, qos, retained, payload)
+	}
+}
+
+func (session *Session) DefaultMessageHandler(_ delegate.Client, msg delegate.Message) {
 	if session.OnMessage != nil {
 		session.OnMessage(*session, msg.Topic(), msg.Payload())
 	}
