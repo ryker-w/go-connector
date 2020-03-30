@@ -3,7 +3,7 @@ package lorawan
 import (
 	"fmt"
 	"github.com/lishimeng/go-connector/mqtt"
-	"github.com/lishimeng/go-libs/log"
+	"github.com/lishimeng/go-log"
 )
 
 type UpLinkListener func(data PayloadRx)
