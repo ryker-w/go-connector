@@ -2,7 +2,6 @@ package stomp
 
 import (
 	"fmt"
-	"github.com/lishimeng/go-log"
 	"github.com/lishimeng/stomp"
 	"time"
 )
@@ -163,8 +162,6 @@ func (c *Connector) subscribeLoop(sub *Subscription, handler MessageHandler) {
 		case msg := <-sub.delegate.C:
 			err := msg.Err
 			if err != nil {
-				log.Info(err)
-				log.Info("stop subscribe loop")
 
 				sub.stop <- 0x00
 				c.LostConn(err)
