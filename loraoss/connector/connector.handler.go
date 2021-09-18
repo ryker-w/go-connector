@@ -13,7 +13,7 @@ func login(host string, path string, username string, password string) (token lo
 	client := resty.New().SetHostURL(host) //.SetDebug(DebugEnable)
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(map[string]interface{}{"username": username, "password": password}).
+		SetBody(map[string]interface{}{"email": username, "password": password}).
 		Post(path)
 	if err == nil {
 		raw := resp.Body()
